@@ -10,6 +10,6 @@ const providers = [UsersRepository];
 	imports: [SequelizeModule.forFeature([User])],
 	controllers: [],
 	providers,
-	exports: [...providers, SequelizeModule.forFeature([User])],
+	exports: [...providers],
 })
 export class RepositoryModule {}
