@@ -7,10 +7,11 @@ import { RepositoryModule } from './repository/repository.module';
 import { UsersModule } from './modules/users/users.module';
 import { getDataBaseConfig } from './config';
 import { Dialect } from 'sequelize';
+import { validate } from '../env.validation';
 
 @Module({
 	imports: [
-		ConfigModule.forRoot(),
+		ConfigModule.forRoot({ validate }),
 		SequelizeModule.forRoot({
 			dialect: getDataBaseConfig().dialect as Dialect,
 			host: getDataBaseConfig().host,
