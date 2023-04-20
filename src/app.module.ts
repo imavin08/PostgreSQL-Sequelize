@@ -6,21 +6,12 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { RepositoryModule } from './repository/repository.module';
 import { UsersModule } from './modules/users/users.module';
 import { getDataBaseConfig } from './config';
-import { Dialect } from 'sequelize';
 import { validate } from '../env.validation';
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({ validate }),
-		SequelizeModule.forRoot({
-			dialect: getDataBaseConfig().dialect as Dialect,
-			host: getDataBaseConfig().host,
-			port: getDataBaseConfig().port,
-			username: getDataBaseConfig().username,
-			password: getDataBaseConfig().password,
-			database: getDataBaseConfig().databaseName,
-			autoLoadModels: true,
-		}),
+		SequelizeModule.forRoot(getDataBaseConfig()),
 		RepositoryModule,
 		UsersModule,
 	],
