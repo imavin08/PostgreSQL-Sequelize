@@ -29,12 +29,12 @@ export class AuthService {
 		this.expiresIn = getAuth().expiresIn;
 	}
 
-	async signUp(user: SignUpRequestDto): Promise<string> {
-		const userExists = await this.usersRepository.findByEmail(user.email);
+	async signUp(user: SignUpRequestDto, reqHost: string): Promise<string> {
+		const userExists = await this.usersRepository.findBy({
+			email: user.email,
+		});
 		if (userExists) {
-			throw new ConflictException(
-				`User with email ${user.email} has already existed`
-			);
+			throw new ConflictException(`User with email ${user.email} has already existed`);
 		}
 		try {
 			user.password = await hash(user.password, 10);
@@ -50,7 +50,8 @@ export class AuthService {
 					expiresIn: this.expiresIn,
 				}
 			);
-			await this.mailerService.sendMail(user.email, token);
+
+			await this.mailerService.sendMail(user.email, token, reqHost);
 			return 'Please confirm your email';
 		} catch (error) {
 			throw new BadRequestException(error.message);
@@ -63,16 +64,16 @@ export class AuthService {
 	}
 
 	async signIn(req: SignInRequestDto): Promise<string> {
-		const user = await this.usersRepository.findByEmail(req.email);
+		const user = await this.usersRepository.findBy({ email: req.email });
 		if (!user) {
-			throw new NotFoundException(`Email ${req.email} not found`);
+			throw new NotFoundException('Email or password is not correct');
 		} else if (!user.isActive) {
 			throw new BadRequestException('User is not active');
 		}
 
 		const checkPassword = await compare(req.password, user.password);
 		if (!checkPassword) {
-			throw new BadRequestException('Password not valid');
+			throw new BadRequestException('Email or password is not correct');
 		}
 
 		const token = await this.jwtService.signAsync(

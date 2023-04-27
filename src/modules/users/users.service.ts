@@ -11,7 +11,7 @@ export class UsersService {
 	}
 
 	async findByName(name: string): Promise<UserResponse> {
-		return this.usersRepository.findByName(name);
+		return this.usersRepository.findBy({ name });
 	}
 
 	async getAllUsers(): Promise<UserResponse[]> {

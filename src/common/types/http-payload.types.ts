@@ -1,3 +1,3 @@
-import { ApiJwtPayload } from '../interfaces';
+import { JwtUserPayload } from '../interfaces';
 
-export type HttpRequestWithUser = Request & { user: ApiJwtPayload };
+export type HttpRequestWithUser = Request & { user: JwtUserPayload };

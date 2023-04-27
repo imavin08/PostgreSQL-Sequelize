@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { FindUserBy } from 'src/common';
 import { CreateUserRequest } from 'src/common/dto/user';
 import { User } from 'src/modules/users/entities/user.entity';
 
@@ -14,16 +15,8 @@ export class UsersRepository {
 		return this.userModel.create({ ...request });
 	}
 
-	async findByEmail(email: string): Promise<User> {
-		return this.userModel.findOne({ where: { email } });
-	}
-
-	async findById(id: number): Promise<User> {
-		return this.userModel.findOne({ where: { id } });
-	}
-
-	async findByName(name: string): Promise<User> {
-		return this.userModel.findOne({ where: { name } });
+	async findBy(filter: FindUserBy): Promise<User> {
+		return this.userModel.findOne({ where: { ...filter } });
 	}
 
 	async getAll(): Promise<User[]> {

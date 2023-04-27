@@ -17,12 +17,12 @@ export class MailerService {
 		});
 	}
 
-	async sendMail(to: string, token: string) {
+	async sendMail(to: string, token: string, reqHost: string) {
 		await this.transporter.sendMail({
 			from: 'sequilizeProject',
 			to,
 			subject: 'please confirm your email',
-			html: `Please confirm your email <a href="http://localhost:8000/auth/confirm/?token=${token}}">click here</a>`,
+			html: `Please confirm your email <a href="${reqHost}/auth/confirm/?token=${token}}">click here</a>`,
 		});
 	}
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { UserResponse, SignUpRequestDto } from 'src/common/dto';
@@ -12,8 +12,8 @@ export class AuthController {
 	@Post('signup')
 	@ApiOperation({ summary: 'SignUp', description: 'signUp' })
 	@ApiResponse({ type: UserResponse })
-	async signUpLocal(@Body() user: SignUpRequestDto): Promise<string> {
-		return this.authService.signUp(user);
+	async signUpLocal(@Body() user: SignUpRequestDto, @Req() req: any): Promise<string> {
+		return this.authService.signUp(user, req.headers.origin);
 	}
 
 	@Get('confirm')
