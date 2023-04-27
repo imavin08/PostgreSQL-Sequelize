@@ -1,5 +1,7 @@
 import { DataTypes } from 'sequelize';
-import { Table, Column, Model, PrimaryKey } from 'sequelize-typescript';
+import { Table, Column, Model, PrimaryKey, BelongsToMany } from 'sequelize-typescript';
+import { Role } from 'src/modules/roles/entities/role.entity';
+import { UserRole } from 'src/modules/roles/entities/userRole.entitty';
 
 @Table
 export class User extends Model {
@@ -20,6 +22,12 @@ export class User extends Model {
 	@Column
 	password: string;
 
-	@Column
+	@Column({ defaultValue: true })
 	isActive: boolean;
+
+	@Column({ defaultValue: null })
+	token: null | string;
+
+	// @BelongsToMany(() => Role, () => UserRole)
+	// roles: Role[];
 }

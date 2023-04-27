@@ -7,6 +7,7 @@ import { RepositoryModule } from './repository/repository.module';
 import { UsersModule } from './modules/users/users.module';
 import { getDataBaseConfig } from './config';
 import { validate } from '../env.validation';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
 	imports: [
@@ -14,6 +15,7 @@ import { validate } from '../env.validation';
 		SequelizeModule.forRoot(getDataBaseConfig()),
 		RepositoryModule,
 		UsersModule,
+		AuthModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],
