@@ -9,4 +9,16 @@ export class UsersService {
 	async createUser(request: CreateUserRequest): Promise<UserResponse> {
 		return this.usersRepository.createUser(request);
 	}
+
+	async findByName(name: string): Promise<UserResponse> {
+		return this.usersRepository.findByName(name);
+	}
+
+	async getAllUsers(): Promise<UserResponse[]> {
+		return this.usersRepository.getAll();
+	}
+
+	async updateToken(id: number, token: string) {
+		return this.usersRepository.updateToken(id, token);
+	}
 }

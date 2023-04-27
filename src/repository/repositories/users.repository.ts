@@ -13,4 +13,31 @@ export class UsersRepository {
 	async createUser(request: CreateUserRequest): Promise<User> {
 		return this.userModel.create({ ...request });
 	}
+
+	async findByEmail(email: string): Promise<User> {
+		return this.userModel.findOne({ where: { email } });
+	}
+
+	async findById(id: number): Promise<User> {
+		return this.userModel.findOne({ where: { id } });
+	}
+
+	async findByName(name: string): Promise<User> {
+		return this.userModel.findOne({ where: { name } });
+	}
+
+	async getAll(): Promise<User[]> {
+		return this.userModel.findAll();
+	}
+
+	async updateToken(id: number, token: string) {
+		return this.userModel.update(
+			{ token },
+			{
+				where: {
+					id,
+				},
+			}
+		);
+	}
 }

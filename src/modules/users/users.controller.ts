@@ -22,6 +22,6 @@ export class UsersController {
 	@ApiOperation({ summary: '[GetAllUsers]', description: 'get all users' })
 	@ApiResponse({ type: UserResponse, isArray: true })
 	async getAllUsers() {
-		return;
+		return this.usersService.getAllUsers();
 	}
 }
