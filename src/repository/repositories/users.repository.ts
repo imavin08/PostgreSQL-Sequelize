@@ -23,7 +23,7 @@ export class UsersRepository {
 		return this.userModel.findAll();
 	}
 
-	async updateToken(id: number, token: string) {
+	async updateToken(id: string, token: string) {
 		return this.userModel.update(
 			{ token },
 			{
@@ -32,5 +32,10 @@ export class UsersRepository {
 				},
 			}
 		);
+	}
+
+	async deleteUser(id: string) {
+		const user = await this.findBy({ id });
+		return user.destroy();
 	}
 }

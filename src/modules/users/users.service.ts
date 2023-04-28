@@ -18,7 +18,11 @@ export class UsersService {
 		return this.usersRepository.getAll();
 	}
 
-	async updateToken(id: number, token: string) {
+	async updateToken(id: string, token: string) {
 		return this.usersRepository.updateToken(id, token);
+	}
+
+	async deleteUser(id: string) {
+		return this.usersRepository.deleteUser(id);
 	}
 }

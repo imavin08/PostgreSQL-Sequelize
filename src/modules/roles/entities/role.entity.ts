@@ -1,6 +1,7 @@
-import { PrimaryKey, Column, BeforeCreate, Model } from 'sequelize-typescript';
+import { PrimaryKey, Column, BeforeCreate, Model, Table } from 'sequelize-typescript';
 import { v4 as uuidv4 } from 'uuid';
 
+@Table
 export class Role extends Model {
 	@PrimaryKey
 	@Column

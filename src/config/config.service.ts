@@ -10,6 +10,7 @@ export const getDataBaseConfig = () => ({
 	username: get('DATABASE_USERNAME').required().asString(),
 	password: get('DATABASE_PASSWORD').required().asString(),
 	database: get('DATABASE_NAME').required().asString(),
+	models: [__dirname + '/../modules/**/**/*.*.ts'],
 	autoLoadModels: true,
 });
 

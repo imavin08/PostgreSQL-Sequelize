@@ -4,11 +4,13 @@ import {
 	ForeignKey,
 	Model,
 	PrimaryKey,
+	Table,
 } from 'sequelize-typescript';
 import { User } from 'src/modules/users/entities/user.entity';
-import { Role } from './role.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { Role } from './role.entity';
 
+@Table
 export class UserRole extends Model {
 	@PrimaryKey
 	@Column

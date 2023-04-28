@@ -8,12 +8,13 @@ import {
 	NotFoundException,
 } from '@nestjs/common';
 import { SignUpRequestDto } from 'src/common/dto/auth';
-import { UsersRepository } from 'src/repository/repositories';
+import { RoleRepository, UsersRepository } from 'src/repository/repositories';
 import { UsersService } from 'src/modules/users/users.service';
 import { UserResponse } from 'src/common/dto';
 import { MailerService } from 'src/modules/mail/mail.service';
 import { getAuth } from 'src/config';
 import { SignInRequestDto } from 'src/common/dto/auth/requests/signin.request.dto';
+import { RoleEnum } from 'src/common';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,8 @@ export class AuthService {
 		private readonly usersRepository: UsersRepository,
 		private readonly usersService: UsersService,
 		private readonly mailerService: MailerService,
-		private readonly jwtService: JwtService
+		private readonly jwtService: JwtService,
+		private readonly roleRepository: RoleRepository
 	) {
 		this.jwtSecret = getAuth().jwtSecret;
 		this.expiresIn = getAuth().expiresIn;
@@ -63,18 +65,20 @@ export class AuthService {
 		return this.usersService.createUser(payload);
 	}
 
-	async signIn(req: SignInRequestDto): Promise<string> {
+	async signIn(req: SignInRequestDto, type: RoleEnum): Promise<string> {
 		const user = await this.usersRepository.findBy({ email: req.email });
 		if (!user) {
 			throw new NotFoundException('Email or password is not correct');
 		} else if (!user.isActive) {
 			throw new BadRequestException('User is not active');
 		}
-
 		const checkPassword = await compare(req.password, user.password);
 		if (!checkPassword) {
 			throw new BadRequestException('Email or password is not correct');
 		}
+
+		const role = await this.roleRepository.findByName(type);
+		await this.roleRepository.addUserRole(user.id, role.id);
 
 		const token = await this.jwtService.signAsync(
 			{
@@ -87,6 +91,7 @@ export class AuthService {
 				expiresIn: this.expiresIn,
 			}
 		);
+
 		await this.usersService.updateToken(user.id, token);
 		return token;
 	}
