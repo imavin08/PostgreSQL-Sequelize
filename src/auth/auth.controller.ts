@@ -23,7 +23,6 @@ export class AuthController {
 		return this.authService.confirmEmail(token);
 	}
 
-	// @UseGuards(JwtAuthGuard)
 	@Post('signIn')
 	@ApiOperation({ summary: 'SignIn', description: 'signIn' })
 	@ApiResponse({ type: UserResponse })

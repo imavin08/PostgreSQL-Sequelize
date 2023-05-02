@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 import { FindUserBy } from 'src/common';
+import { RoleEnum } from 'src/common/enums/role.enum';
+
 import { CreateUserRequest } from 'src/common/dto/user';
+import { Role } from 'src/modules/roles/entities/role.entity';
 import { User } from 'src/modules/users/entities/user.entity';
 
 @Injectable()
@@ -16,21 +20,31 @@ export class UsersRepository {
 	}
 
 	async findBy(filter: FindUserBy): Promise<User> {
-		return this.userModel.findOne({ where: { ...filter } });
+		return this.userModel.findOne({ where: { ...filter }, include: { model: Role } });
 	}
 
-	async getAll(): Promise<User[]> {
-		return this.userModel.findAll();
-	}
-
-	async updateToken(id: number, token: string) {
-		return this.userModel.update(
-			{ token },
-			{
+	async getAllForSuperAdmin(): Promise<User[]> {
+		return this.userModel.findAll({
+			include: {
+				model: Role,
 				where: {
-					id,
+					[Op.or]: [{ name: RoleEnum.USER }, { name: RoleEnum.ADMIN }],
 				},
-			}
-		);
+			},
+		});
+	}
+
+	async getAllForAdmin(): Promise<User[]> {
+		return this.userModel.findAll({
+			include: {
+				model: Role,
+				where: { name: RoleEnum.USER },
+			},
+		});
+	}
+
+	async deleteUser(id: string) {
+		const user = await this.findBy({ id });
+		return user.destroy();
 	}
 }

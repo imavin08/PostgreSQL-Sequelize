@@ -1,5 +1,5 @@
 export interface FindUserBy {
 	email?: string;
-	id?: number;
+	id?: string;
 	name?: string;
 }

@@ -8,7 +8,7 @@ import {
 	NotFoundException,
 } from '@nestjs/common';
 import { SignUpRequestDto } from 'src/common/dto/auth';
-import { UsersRepository } from 'src/repository/repositories';
+import { RoleRepository, UsersRepository } from 'src/repository/repositories';
 import { UsersService } from 'src/modules/users/users.service';
 import { UserResponse } from 'src/common/dto';
 import { MailerService } from 'src/modules/mail/mail.service';
@@ -23,7 +23,8 @@ export class AuthService {
 		private readonly usersRepository: UsersRepository,
 		private readonly usersService: UsersService,
 		private readonly mailerService: MailerService,
-		private readonly jwtService: JwtService
+		private readonly jwtService: JwtService,
+		private readonly roleRepository: RoleRepository
 	) {
 		this.jwtSecret = getAuth().jwtSecret;
 		this.expiresIn = getAuth().expiresIn;
@@ -70,7 +71,6 @@ export class AuthService {
 		} else if (!user.isActive) {
 			throw new BadRequestException('User is not active');
 		}
-
 		const checkPassword = await compare(req.password, user.password);
 		if (!checkPassword) {
 			throw new BadRequestException('Email or password is not correct');
@@ -87,7 +87,7 @@ export class AuthService {
 				expiresIn: this.expiresIn,
 			}
 		);
-		await this.usersService.updateToken(user.id, token);
+
 		return token;
 	}
 }

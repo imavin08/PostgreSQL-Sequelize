@@ -1,17 +1,25 @@
+import { v4 as uuidv4 } from 'uuid';
 import { DataTypes } from 'sequelize';
-import { Table, Column, Model, PrimaryKey, BelongsToMany } from 'sequelize-typescript';
+import {
+	Table,
+	Column,
+	Model,
+	PrimaryKey,
+	BelongsToMany,
+	BeforeCreate,
+} from 'sequelize-typescript';
 import { Role } from 'src/modules/roles/entities/role.entity';
-import { UserRole } from 'src/modules/roles/entities/userRole.entitty';
+import { UserRole } from 'src/modules/roles/entities/userRole.entity';
 
 @Table
 export class User extends Model {
 	@PrimaryKey
 	@Column({
-		type: DataTypes.INTEGER,
-		autoIncrement: true,
+		type: DataTypes.UUIDV4,
 		allowNull: false,
+		defaultValue: uuidv4(),
 	})
-	id: number;
+	id: string;
 
 	@Column
 	name: string;
@@ -25,9 +33,11 @@ export class User extends Model {
 	@Column({ defaultValue: true })
 	isActive: boolean;
 
-	@Column({ defaultValue: null })
-	token: null | string;
+	@BelongsToMany(() => Role, () => UserRole)
+	roles: Role[];
 
-	// @BelongsToMany(() => Role, () => UserRole)
-	// roles: Role[];
+	@BeforeCreate
+	static addUuidId(instance: User) {
+		instance.id = uuidv4();
+	}
 }
