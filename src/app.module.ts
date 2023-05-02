@@ -8,6 +8,7 @@ import { UsersModule } from './modules/users/users.module';
 import { getDataBaseConfig } from './config';
 import { validate } from '../env.validation';
 import { AuthModule } from './auth/auth.module';
+import { RoleModule } from './modules/roles/role.module';
 
 @Module({
 	imports: [
@@ -16,6 +17,7 @@ import { AuthModule } from './auth/auth.module';
 		RepositoryModule,
 		UsersModule,
 		AuthModule,
+		RoleModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

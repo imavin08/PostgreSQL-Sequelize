@@ -72,10 +72,6 @@ module.exports = {
 				type: Sequelize.BOOLEAN,
 				defaultValue: true,
 			},
-			token: {
-				type: Sequelize.STRING,
-				defaultValue: null,
-			},
 			createdAt: {
 				type: Sequelize.DATE,
 				allowNull: false,
@@ -141,9 +137,6 @@ module.exports = {
 	down: async (queryInterface, Sequelize) => {
 		// Drop the UserRole table
 		await queryInterface.dropTable('UserRoles');
-
-		// Delete the roles
-		await queryInterface.bulkDelete('Roles', { name: roles.type }, {});
 
 		//Drop table Roles
 		await queryInterface.dropTable('Roles');

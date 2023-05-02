@@ -14,7 +14,6 @@ import { UserResponse } from 'src/common/dto';
 import { MailerService } from 'src/modules/mail/mail.service';
 import { getAuth } from 'src/config';
 import { SignInRequestDto } from 'src/common/dto/auth/requests/signin.request.dto';
-import { RoleEnum } from 'src/common';
 
 @Injectable()
 export class AuthService {
@@ -65,7 +64,7 @@ export class AuthService {
 		return this.usersService.createUser(payload);
 	}
 
-	async signIn(req: SignInRequestDto, type: RoleEnum): Promise<string> {
+	async signIn(req: SignInRequestDto): Promise<string> {
 		const user = await this.usersRepository.findBy({ email: req.email });
 		if (!user) {
 			throw new NotFoundException('Email or password is not correct');
@@ -76,9 +75,6 @@ export class AuthService {
 		if (!checkPassword) {
 			throw new BadRequestException('Email or password is not correct');
 		}
-
-		const role = await this.roleRepository.findByName(type);
-		await this.roleRepository.addUserRole(user.id, role.id);
 
 		const token = await this.jwtService.signAsync(
 			{
@@ -92,7 +88,6 @@ export class AuthService {
 			}
 		);
 
-		await this.usersService.updateToken(user.id, token);
 		return token;
 	}
 }

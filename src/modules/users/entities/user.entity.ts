@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { DataTypes } from 'sequelize';
 import {
 	Table,
@@ -9,7 +10,6 @@ import {
 } from 'sequelize-typescript';
 import { Role } from 'src/modules/roles/entities/role.entity';
 import { UserRole } from 'src/modules/roles/entities/userRole.entity';
-import { v4 as uuidv4 } from 'uuid';
 
 @Table
 export class User extends Model {
@@ -17,6 +17,7 @@ export class User extends Model {
 	@Column({
 		type: DataTypes.UUIDV4,
 		allowNull: false,
+		defaultValue: uuidv4(),
 	})
 	id: string;
 
@@ -31,9 +32,6 @@ export class User extends Model {
 
 	@Column({ defaultValue: true })
 	isActive: boolean;
-
-	@Column({ defaultValue: null })
-	token: null | string;
 
 	@BelongsToMany(() => Role, () => UserRole)
 	roles: Role[];
