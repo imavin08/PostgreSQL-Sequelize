@@ -18,3 +18,7 @@ export const getAuth = () => ({
 	jwtSecret: get('JWT_SECRET').asString(),
 	expiresIn: get('EXPIRESIN').asInt(),
 });
+
+export const getFlyApiToken = () => ({
+	flyApiToken: get('FLY_API_TOKEN').asString(),
+});
