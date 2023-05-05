@@ -1,10 +1,10 @@
 'use strict';
 
-const { v4: uuidv4 } = require('uuid');
+const { v4 } = require('uuid');
 
-const userId = uuidv4();
-const adminId = uuidv4();
-const superAdminId = uuidv4();
+const userId = v4();
+const adminId = v4();
+const superAdminId = v4();
 
 const roles = [
 	{
