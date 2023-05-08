@@ -1,3 +1,4 @@
+import { v4 } from 'uuid';
 import {
 	BeforeCreate,
 	Column,
@@ -7,7 +8,6 @@ import {
 	Table,
 } from 'sequelize-typescript';
 import { User } from 'src/modules/users/entities/user.entity';
-import { v4 as uuidv4 } from 'uuid';
 import { Role } from './role.entity';
 
 @Table
@@ -26,6 +26,6 @@ export class UserRole extends Model {
 
 	@BeforeCreate
 	static addUuidId(instance: UserRole) {
-		instance.id = uuidv4();
+		instance.id = v4();
 	}
 }

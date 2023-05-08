@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 } from 'uuid';
 import { DataTypes } from 'sequelize';
 import {
 	Table,
@@ -15,9 +15,9 @@ import { UserRole } from 'src/modules/roles/entities/userRole.entity';
 export class User extends Model {
 	@PrimaryKey
 	@Column({
-		type: DataTypes.UUIDV4,
+		type: DataTypes.UUID,
 		allowNull: false,
-		defaultValue: uuidv4(),
+		defaultValue: v4(),
 	})
 	id: string;
 
@@ -38,6 +38,6 @@ export class User extends Model {
 
 	@BeforeCreate
 	static addUuidId(instance: User) {
-		instance.id = uuidv4();
+		instance.id = v4();
 	}
 }
