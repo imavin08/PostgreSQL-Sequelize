@@ -1,8 +1,9 @@
 import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags, ApiQuery } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { UserResponse, SignUpRequestDto } from 'src/common/dto';
 import { SignInRequestDto } from 'src/common/dto/auth/requests/signin.request.dto';
+import { RoleEnum } from 'src/common';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -25,8 +26,12 @@ export class AuthController {
 
 	@Post('signIn')
 	@ApiOperation({ summary: 'SignIn', description: 'signIn' })
+	@ApiQuery({ name: 'role', enum: RoleEnum })
 	@ApiResponse({ type: UserResponse })
-	async signIn(@Body() req: SignInRequestDto): Promise<string> {
-		return this.authService.signIn(req);
+	async signIn(
+		@Body() req: SignInRequestDto,
+		@Query('role') role: RoleEnum
+	): Promise<string> {
+		return this.authService.signIn(req, role);
 	}
 }

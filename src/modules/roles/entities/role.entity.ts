@@ -1,6 +1,6 @@
 import { PrimaryKey, Column, BeforeCreate, Model, Table } from 'sequelize-typescript';
 import { v4 } from 'uuid';
-@Table
+@Table({ timestamps: false })
 export class Role extends Model {
 	@PrimaryKey
 	@Column
