@@ -2,17 +2,15 @@
 
 const { v4 } = require('uuid');
 
-const userRoleId = v4();
-const adminRoleId = v4();
 const superAdminRoleId = v4();
 const superAdminUserId = v4();
 const roles = [
 	{
-		id: userRoleId,
+		id: v4(),
 		type: 'User',
 	},
 	{
-		id: adminRoleId,
+		id: v4(),
 		type: 'Admin',
 	},
 	{
