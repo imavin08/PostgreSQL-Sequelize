@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { RoleEnum } from 'src/common';
 import { CreateUserRequest, UserResponse } from 'src/common/dto';
-import { checkUserRole } from 'src/common/helpers/check-userRole';
+import { CheckUserRole } from 'src/common/helpers/check-userRole';
 import { RoleRepository, UsersRepository } from 'src/repository/repositories';
 import { UserRole } from '../roles/entities/userRole.entity';
 
@@ -41,7 +41,7 @@ export class UsersService {
 
 	async addAdminRole(userId: string): Promise<UserRole> {
 		const user = await this.usersRepository.findBy({ id: userId });
-		const includeRole = checkUserRole(user, RoleEnum.ADMIN);
+		const includeRole = CheckUserRole(user, RoleEnum.ADMIN);
 		if (includeRole) {
 			throw new BadRequestException(`User already has ${RoleEnum.ADMIN} role`);
 		}
@@ -51,7 +51,7 @@ export class UsersService {
 
 	async deleteAdminRole(userId: string): Promise<UserRole> {
 		const user = await this.usersRepository.findBy({ id: userId });
-		const includeRole = checkUserRole(user, RoleEnum.ADMIN);
+		const includeRole = CheckUserRole(user, RoleEnum.ADMIN);
 		if (!includeRole) {
 			throw new BadRequestException(`User does not have ${RoleEnum.ADMIN} role`);
 		}
