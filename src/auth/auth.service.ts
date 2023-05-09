@@ -4,6 +4,7 @@ import jwtDecode from 'jwt-decode';
 import {
 	BadRequestException,
 	ConflictException,
+	ForbiddenException,
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { UserResponse } from 'src/common/dto';
 import { MailerService } from 'src/modules/mail/mail.service';
 import { getAuth } from 'src/config';
 import { SignInRequestDto } from 'src/common/dto/auth/requests/signin.request.dto';
+import { CheckUserRole, RoleEnum } from 'src/common';
 
 @Injectable()
 export class AuthService {
@@ -64,7 +66,7 @@ export class AuthService {
 		return this.usersService.createUser(payload);
 	}
 
-	async signIn(req: SignInRequestDto): Promise<string> {
+	async signIn(req: SignInRequestDto, role: RoleEnum): Promise<string> {
 		const user = await this.usersRepository.findBy({ email: req.email });
 		if (!user) {
 			throw new NotFoundException('Email or password is not correct');
@@ -75,12 +77,17 @@ export class AuthService {
 		if (!checkPassword) {
 			throw new BadRequestException('Email or password is not correct');
 		}
+		const includeRole = CheckUserRole(user, role);
+		if (!includeRole) {
+			throw new ForbiddenException('You do not have access rights under this role');
+		}
 
 		const token = await this.jwtService.signAsync(
 			{
 				id: user.id,
 				name: user.name,
 				email: user.email,
+				role,
 			},
 			{
 				secret: this.jwtSecret,

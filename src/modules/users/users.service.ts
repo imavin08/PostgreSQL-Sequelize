@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { RoleEnum } from 'src/common';
 import { CreateUserRequest, UserResponse } from 'src/common/dto';
+import { checkUserRole } from 'src/common/helpers/check-userRole';
 import { RoleRepository, UsersRepository } from 'src/repository/repositories';
+import { UserRole } from '../roles/entities/userRole.entity';
 
 @Injectable()
 export class UsersService {
@@ -31,5 +33,30 @@ export class UsersService {
 
 	async deleteUser(id: string) {
 		return this.usersRepository.deleteUser(id);
+	}
+
+	async getInformationAboutMe(userId: string): Promise<UserResponse> {
+		return this.usersRepository.findBy({ id: userId });
+	}
+
+	async addAdminRole(userId: string): Promise<UserRole> {
+		const user = await this.usersRepository.findBy({ id: userId });
+		const includeRole = checkUserRole(user, RoleEnum.ADMIN);
+		if (includeRole) {
+			throw new BadRequestException(`User already has ${RoleEnum.ADMIN} role`);
+		}
+		const role = await this.roleRepository.findByName(RoleEnum.ADMIN);
+		return this.roleRepository.addUserRole(userId, role.id);
+	}
+
+	async deleteAdminRole(userId: string): Promise<UserRole> {
+		const user = await this.usersRepository.findBy({ id: userId });
+		const includeRole = checkUserRole(user, RoleEnum.ADMIN);
+		if (!includeRole) {
+			throw new BadRequestException(`User does not have ${RoleEnum.ADMIN} role`);
+		}
+		const role = await this.roleRepository.findByName(RoleEnum.ADMIN);
+		await this.roleRepository.deleteUserRole(userId, role.id);
+		return;
 	}
 }

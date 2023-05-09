@@ -17,7 +17,14 @@ export class RoleRepository {
 		return this.roleModel.findOne({ where: { name } });
 	}
 
-	async addUserRole(userId: string, roleId: string) {
+	async addUserRole(userId: string, roleId: string): Promise<UserRole> {
 		return this.userRoleModel.create({ userId, roleId });
+	}
+
+	async deleteUserRole(userId: string, roleId: string): Promise<void> {
+		const userRoleRecord = await this.userRoleModel.findOne({
+			where: { userId, roleId },
+		});
+		return userRoleRecord.destroy();
 	}
 }

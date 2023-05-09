@@ -10,7 +10,7 @@ import {
 import { User } from 'src/modules/users/entities/user.entity';
 import { Role } from './role.entity';
 
-@Table
+@Table({ timestamps: false })
 export class UserRole extends Model {
 	@PrimaryKey
 	@Column

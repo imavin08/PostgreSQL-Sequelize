@@ -2,21 +2,19 @@
 
 const { v4 } = require('uuid');
 
-const userId = v4();
-const adminId = v4();
-const superAdminId = v4();
-
+const superAdminRoleId = v4();
+const superAdminUserId = v4();
 const roles = [
 	{
-		id: userId,
+		id: v4(),
 		type: 'User',
 	},
 	{
-		id: adminId,
+		id: v4(),
 		type: 'Admin',
 	},
 	{
-		id: superAdminId,
+		id: superAdminRoleId,
 		type: 'SuperAdmin',
 	},
 ];
@@ -132,6 +130,27 @@ module.exports = {
 			updatedAt: new Date(),
 		}));
 		await queryInterface.bulkInsert('Roles', roleObjs, {});
+
+		// Create SuperAdmin
+		const superAdmin = [
+			{
+				id: superAdminUserId,
+				name: 'SuperAdmin',
+				email: 'superAdmin08@gmail.com',
+				password: '$2a$10$rf5ryMuGztmBo185S1XA1uqbvb2tGPureyiUNOfv1vVePbXuUVko6',
+				isActive: true,
+			},
+		];
+		await queryInterface.bulkInsert('Users', superAdmin, {});
+
+		const addSuperAdmin = [
+			{
+				id: v4(),
+				userId: superAdminUserId,
+				roleId: superAdminRoleId,
+			},
+		];
+		await queryInterface.bulkInsert('UserRoles', addSuperAdmin, {});
 	},
 
 	down: async (queryInterface, Sequelize) => {

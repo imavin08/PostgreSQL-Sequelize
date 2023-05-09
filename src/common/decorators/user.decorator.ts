@@ -5,6 +5,6 @@ import { JwtUserPayload } from '../interfaces';
 export const HttpUser = createParamDecorator(
 	(data: unknown, ctx: ExecutionContext): JwtUserPayload => {
 		const request: HttpRequestWithUser = ctx.switchToHttp().getRequest();
-		return request.user.dataValues;
+		return request.user;
 	}
 );
