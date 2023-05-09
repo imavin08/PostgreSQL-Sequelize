@@ -31,7 +31,7 @@ export class UsersService {
 		return this.usersRepository.getAllForAdmin();
 	}
 
-	async deleteUser(id: string) {
+	async deleteUser(id: string): Promise<void> {
 		return this.usersRepository.deleteUser(id);
 	}
 
@@ -58,5 +58,17 @@ export class UsersService {
 		const role = await this.roleRepository.findByName(RoleEnum.ADMIN);
 		await this.roleRepository.deleteUserRole(userId, role.id);
 		return;
+	}
+
+	async changeUserStatus(
+		id: string,
+		status: boolean,
+		roles: string[]
+	): Promise<UserResponse> {
+		const isSuperAdmin = roles.includes(RoleEnum.SUPER_ADMIN);
+		if (!isSuperAdmin) {
+			return this.usersRepository.updateStatusForUserAndAdminRole(id, status);
+		}
+		return this.usersRepository.updateStatusOnlyForUserRole(id, status);
 	}
 }
