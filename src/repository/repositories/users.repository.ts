@@ -43,8 +43,36 @@ export class UsersRepository {
 		});
 	}
 
-	async deleteUser(id: string) {
+	async deleteUser(id: string): Promise<void> {
 		const user = await this.findBy({ id });
 		return user.destroy();
+	}
+
+	async updateStatusOnlyForUserRole(id: string, status: boolean): Promise<User> {
+		const user = await this.userModel.findOne({
+			where: { id },
+			include: {
+				model: Role,
+				where: { name: RoleEnum.USER },
+			},
+		});
+		user.set({
+			isActive: status,
+		});
+		return user.save();
+	}
+
+	async updateStatusForUserAndAdminRole(id: string, status: boolean): Promise<User> {
+		const user = await this.userModel.findOne({
+			where: { id },
+			include: {
+				model: Role,
+				where: { [Op.or]: [{ name: RoleEnum.USER }, { name: RoleEnum.ADMIN }] },
+			},
+		});
+		user.set({
+			isActive: status,
+		});
+		return user.save();
 	}
 }
